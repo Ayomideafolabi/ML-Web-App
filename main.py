@@ -40,3 +40,19 @@ def add_parameter_ui(clf_name):
         params["max_depth"] = max_depth
         params["n_estimators"] = n_estimators
     return params
+
+params = add_parameter_ui(classifier_name)
+
+def get_classifier(clf_name, params):
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.svm import SVC
+    from sklearn.ensemble import RandomForestClassifier
+    if clf_name == "KNN":
+        clf = KNeighborsClassifier(n_neighbors=params["K"])
+    elif clf_name == "SVM":
+        clf = SVC(C=params["C"])
+    else:
+        clf = RandomForestClassifier(max_depth=params["max_depth"], n_estimators=params["n_estimators"])
+    return clf
+
+clf = get_classifier(classifier_name, params)
