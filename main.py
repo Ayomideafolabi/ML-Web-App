@@ -1,4 +1,6 @@
 import streamlit as st
+from sklearn.decomposition import PCA
+
 
 st.title("My Streamlit App")
 
@@ -56,3 +58,33 @@ def get_classifier(clf_name, params):
     return clf
 
 clf = get_classifier(classifier_name, params)
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+
+from sklearn.metrics import accuracy_score
+acc = accuracy_score(y_test, y_pred)
+st.write(f"Classifier = {classifier_name}")
+st.write(f"Accuracy = {acc}")
+from sklearn.metrics import confusion_matrix
+st.write("Confusion Matrix:")
+st.write(confusion_matrix(y_test, y_pred))
+
+
+# PLOT
+pca = PCA(n_components=2)
+X_projected = pca.fit_transform(X)
+x1 = X_projected[:, 0]
+x2 = X_projected[:, 1]
+
+import matplotlib.pyplot as plt
+fig = plt.figure()
+plt.scatter(x1, x2, c=y, alpha=0.8, cmap="viridis")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.colorbar()
+st.pyplot(fig)
